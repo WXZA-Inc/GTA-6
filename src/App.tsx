@@ -556,7 +556,7 @@ const REGIONS = [
   },
   {
     id: 'ambrosia', name: 'Ambrosia', inspiration: 'Central Leonida heartland', icon: Factory, accent: 'lime',
-    tagline: 'Sugar country — the industrial heartland where Leonida's supply chains begin.',
+    tagline: 'Sugar country — the industrial heartland where Leonida\'s supply chains begin.',
     profile: 'Industrial · agricultural · heartland',
     angle: 'The working interior: refineries, farmland and freight. Less glamorous than the coast, but the goods the whole state runs on move through here first — and early operators can lock up the supply side cheap.',
     opportunities: ['Supply-chain fronts', 'Industrial property', 'Freight & hauling', 'Early-game operations'],
