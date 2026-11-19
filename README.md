@@ -8,17 +8,17 @@ It turns a research dossier on the GTA VI opportunity into an interactive comman
 the stock-market angle, the in-game economy, the content-creator playbook, and real-world arbitrage.
 
 It's built to be enjoyed, and it's honest about what it is: an **informational and entertainment
-project**, not financial advice. Numbers are a snapshot as of June 26, 2026.
+project**, not financial advice. Numbers are a snapshot as of November 19, 2026.
 
 ![Hero](docs/research/ttwo_chart.png)
 
 ## What's inside
 
-- **Live launch countdown** to November 19, 2026, plus a rolling "virtual economy" ticker.
+- **Live days-since-launch counter** — GTA VI launched November 19, 2026 — plus a rolling "virtual economy" ticker.
 - **The thesis dashboard** — why this is a generational event, with animated stat counters and a
   revenue comparison against the biggest movies ever made.
 - **Six Regions, One Economy** — an interactive map of Leonida (Vice City, Leonida Keys, Grassrivers,
-  Port Gellhorn, Hamlet, Kelly County). Tap a region to read its economic profile, the capitalist
+  Port Gellhorn, Ambrosia, Mount Kalaga). Tap a region to read its economic profile, the capitalist
   angle, where the money is, and an entry-cost meter.
 - **Stock Intelligence** — TTWO analyst targets, peripheral plays (SONY, MSFT, NVDA, CRSR, EA), a
   hype-cycle chart, and a "sell the news" reality check.
@@ -26,6 +26,10 @@ project**, not financial advice. Numbers are a snapshot as of June 26, 2026.
   **property investment matrix** with computed payback periods.
 - **Build Your Content Empire** — content lanes, a **revenue estimator**, and a platform comparison
   matrix (YouTube / TikTok / Twitch / X).
+- **The Residents** — the eight named faces of Leonida: Jason Duval, Lucia Caminos, and the cast around them.
+- **WASTED clips** — our YouTube channel [@WASTEDonVI](https://www.youtube.com/@WASTEDonVI) posting GTA 6
+  clips and Shorts daily, organized into four playlists (Trailers & Reveals, Gameplay Moments,
+  Cars & Map Tours, Funny Fails).
 - **Real-World Arbitrage** — affiliate programs, service arbitrage, and digital products, with honest
   risk labels (including ToS/ban-risk flags on gray-market plays).
 - **The Capitalist Toolkit** — downloadable-style templates and Day 1 / Week 1 / Month 1 checklists.
@@ -126,7 +130,7 @@ docs/
 ## Disclaimer
 
 Not financial advice. For informational and entertainment purposes only. Market data is a snapshot as
-of June 26, 2026. Any gray-market "service arbitrage" ideas are described for completeness and carry
+of November 19, 2026. Any gray-market "service arbitrage" ideas are described for completeness and carry
 the risk labels shown in the app; they may violate a game's Terms of Service — you're responsible for
 your own choices. GTA and Grand Theft Auto are trademarks of their respective owners; this is an
 unofficial fan project with no affiliation.

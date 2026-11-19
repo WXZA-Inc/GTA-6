@@ -7,8 +7,8 @@ import {
   Briefcase, Landmark, Wallet, Sparkles, Brain,
   Download, Gift,
   Megaphone, Swords, Flame, Shield, Eye,
-  MapPin, Anchor, Waves, Building2, Factory, Trees, Mountain,
-  ArrowUp, Coins, Menu
+  MapPin, Anchor, Waves, Building2, Factory, Mountain,
+  ArrowUp, Coins, Menu, Youtube, Play
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -127,23 +127,23 @@ function burstCash(x: number, y: number) {
    COUNTDOWN
    ═══════════════════════════════════════════ */
 function Countdown() {
-  const target = new Date('2026-11-19T00:00:00Z').getTime();
+  const launch = new Date('2026-11-19T00:00:00Z').getTime();
   const [now, setNow] = useState(Date.now());
-  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, []);
-  const diff = Math.max(0, target - now);
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-  const unit = (label: string, val: number) => (
-    <div className="flex flex-col items-center">
-      <div className="bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl px-3 py-2 sm:px-5 sm:py-3 min-w-[64px] sm:min-w-[80px]">
-        <span className="text-2xl sm:text-4xl font-bold mono text-white">{String(val).padStart(2, '0')}</span>
+  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 60000); return () => clearInterval(t); }, []);
+  const daysLive = Math.max(0, Math.floor((now - launch) / 86400000));
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <span className="inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-emerald-300">
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Leonida is open — GTA VI is live
+      </span>
+      <div className="flex flex-col items-center">
+        <div className="bg-white/[0.04] backdrop-blur-xl border border-white/[0.08] rounded-xl px-5 py-3 min-w-[80px]">
+          <span className="text-2xl sm:text-4xl font-bold mono text-white">{String(daysLive).padStart(2, '0')}</span>
+        </div>
+        <span className="text-[10px] sm:text-xs text-white/40 mt-2 uppercase tracking-widest">Days Live</span>
       </div>
-      <span className="text-[10px] sm:text-xs text-white/40 mt-2 uppercase tracking-widest">{label}</span>
     </div>
   );
-  return <div className="flex gap-2 sm:gap-4">{unit('Days', d)}{unit('Hours', h)}{unit('Mins', m)}{unit('Secs', s)}</div>;
 }
 
 /* ═══════════════════════════════════════════
@@ -153,16 +153,15 @@ function Countdown() {
    MARKET DATA — honest snapshot + live-ready hook
    ═══════════════════════════════════════════ */
 const TTWO = {
-  asOf: 'Jul 17, 2026',
-  price: 243.91,
-  changePct: 0.06,       // vs prior close (snapshot)
-  monthChangePct: 12.9,
-  low52: 188.23,
+  asOf: 'Nov 19, 2026',
+  price: 216.61,
+  changePct: 6.22,       // Nov 18, 2026 close vs prior close (snapshot)
+  low52: 183.86,
   high52: 265.94,
   ath: 265.94,
-  marketCap: '$45.3B',
+  marketCap: '$40.5B',
   fwdPE: '23.95',
-  meanTarget: 301,       // mean of the tracked analyst targets below
+  meanTarget: 290,       // analyst consensus mean (range $262–$330), Nov 19, 2026
 };
 
 /**
@@ -210,7 +209,7 @@ async function subscribeEmail(email: string, alerts: string[]): Promise<'ok' | '
   return duplicate ? 'duplicate' : 'ok';
 }
 
-const CATALYST_ALERTS = ['Trailer 3', 'Review embargo', 'Launch day', 'Online launch'];
+const CATALYST_ALERTS = ['Launch trailer', 'First patch', 'Online launch', 'PC announcement'];
 
 const NAV_LINKS = [
   { label: 'Map', href: '#map' },
@@ -219,6 +218,7 @@ const NAV_LINKS = [
   { label: 'Content', href: '#content' },
   { label: 'Arbitrage', href: '#arbitrage' },
   { label: 'Timeline', href: '#timeline' },
+  { label: 'Clips', href: '#clips' },
 ];
 
 function Nav() {
@@ -313,10 +313,10 @@ function EconomyTicker() {
   const items = [
     'GTA V lifetime revenue · $8.5B+',
     'Shark Cards to date · ~$5B',
-    'TTWO · $243.91 ▲ this month +12.9%',
+    'TTWO · $216.61 ▲ +6.22% into launch',
     'GTA VI Year-1 forecast · $3.2B',
     'Launch-day sales est. · $1.2B',
-    'Top analyst target · $368 (+54%)',
+    'Top analyst target · $330',
     'GTA+ subscription · $7.99/mo',
     '64-player lobbies · targeting 96',
     'Ultimate Edition · $99.99',
@@ -336,12 +336,12 @@ function EconomyTicker() {
 
 function Hero() {
   const [email, setEmail] = useState('');
-  const [alerts, setAlerts] = useState<string[]>(['Launch day']);
+  const [alerts, setAlerts] = useState<string[]>(['Online launch']);
   const [subscribed, setSubscribed] = useState(false);
   const q = useLiveQuote();
   const launch = new Date('2026-11-19T00:00:00Z').getTime();
-  const daysToLaunch = Math.max(0, Math.ceil((launch - Date.now()) / 86400000));
-  const topTarget = 368;
+  const daysLive = Math.max(0, Math.floor((Date.now() - launch) / 86400000));
+  const topTarget = 330;
   const upsidePct = Math.round((topTarget / q.price - 1) * 100);
 
   const toggleAlert = (a: string) =>
@@ -366,7 +366,7 @@ function Hero() {
     { label: 'Pre-Orders Live', node: 'June 25', sub: '$79.99 / $99.99', icon: ShoppingCart },
     { label: 'TTWO Price', node: <CountUp value={q.price} prefix="$" decimals={2} />, sub: q.isLive ? 'Live quote' : `Snapshot · ${q.asOf}`, icon: Target },
     { label: 'Top Price Target', node: <CountUp value={topTarget} prefix="$" />, sub: `+${upsidePct}% implied upside`, icon: TrendingUp },
-    { label: 'Days to Launch', node: <CountUp value={daysToLaunch} />, sub: 'The clock is ticking', icon: Clock },
+    { label: 'Days Live', node: <CountUp value={daysLive} />, sub: 'Leonida is open', icon: Clock },
   ];
 
   return (
@@ -378,7 +378,7 @@ function Hero() {
       </div>
       <div className="relative z-10 text-center section-padding max-w-5xl mx-auto pt-24 pb-16">
         <Badge className="bg-orange-500/15 text-orange-300 border-orange-500/25 mb-6 backdrop-blur-sm">
-          <Zap className="w-3 h-3 mr-1.5" /> GTA VI — November 19, 2026
+          <Zap className="w-3 h-3 mr-1.5" /> GTA VI — Live Now · Launched November 19, 2026
         </Badge>
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[0.92] mb-6">
           THE GREATEST
@@ -401,7 +401,7 @@ function Hero() {
         {/* Email capture + catalyst alerts */}
         <div className="max-w-md mx-auto">
           <form onSubmit={submitEmail} className="glass-card p-1 flex gap-1">
-            <Input type="email" placeholder="Enter email for launch alerts" value={email} onChange={e => setEmail(e.target.value)} className="bg-transparent border-0 text-sm text-white placeholder:text-white/30 focus-visible:ring-0 focus-visible:ring-offset-0" />
+            <Input type="email" placeholder="Enter email for Leonida intel" value={email} onChange={e => setEmail(e.target.value)} className="bg-transparent border-0 text-sm text-white placeholder:text-white/30 focus-visible:ring-0 focus-visible:ring-offset-0" />
             <Button type="submit" size="sm" className="bg-orange-600 hover:bg-orange-500 text-white whitespace-nowrap text-xs">{subscribed ? 'Update' : 'Get Alerts'}</Button>
           </form>
           <div className="flex flex-wrap justify-center gap-1.5 mt-2.5">
@@ -555,19 +555,19 @@ const REGIONS = [
     priceTier: 3, heat: 'Value',
   },
   {
-    id: 'hamlet', name: 'Hamlet', inspiration: 'Rural Florida', icon: Trees, accent: 'lime',
-    tagline: 'Sleepy on the surface — eccentric NPCs, easter eggs, and cheap early upside.',
-    profile: 'Suburban / rural · eccentric',
-    angle: 'Rural GTA has always hidden the best early-game money: low police presence, cheap property, and specialized ops the whales overlook. Hidden content rewards the patient.',
-    opportunities: ['Early-game property', 'Specialized ops', 'Hidden content', 'Low-competition niches'],
+    id: 'ambrosia', name: 'Ambrosia', inspiration: 'Central Leonida heartland', icon: Factory, accent: 'lime',
+    tagline: 'Sugar country — the industrial heartland where Leonida's supply chains begin.',
+    profile: 'Industrial · agricultural · heartland',
+    angle: 'The working interior: refineries, farmland and freight. Less glamorous than the coast, but the goods the whole state runs on move through here first — and early operators can lock up the supply side cheap.',
+    opportunities: ['Supply-chain fronts', 'Industrial property', 'Freight & hauling', 'Early-game operations'],
     priceTier: 2, heat: 'Sleeper',
   },
   {
-    id: 'kelly-county', name: 'Kelly County', inspiration: 'Inland Florida', icon: Mountain, accent: 'rose',
-    tagline: 'Backwoods and trailer parks — the most depressed county, the deepest discounts.',
-    profile: 'Depressed rural · backwoods',
-    angle: 'Rock-bottom property values mean early investments here can post the biggest percentage returns. Distance from police hubs makes it the privacy play for operations that need to disappear.',
-    opportunities: ['Low-cost property', 'Off-grid businesses', 'Privacy operations', 'Percentage-return plays'],
+    id: 'mount-kalaga', name: 'Mount Kalaga', inspiration: 'Leonida\'s northern highlands', icon: Mountain, accent: 'rose',
+    tagline: 'Leonida\'s roof — a national park of ridges, trails and total quiet.',
+    profile: 'Wilderness · national park · remote',
+    angle: 'Elevation is privacy. The park\'s trails and off-grid ground are built for laying low, moving unseen, and stashing what the coast is too watched to hold. Low entry cost, high strategic value.',
+    opportunities: ['Off-grid hideouts', 'Trail networks', 'Privacy operations', 'Percentage-return plays'],
     priceTier: 1, heat: 'Deep value',
   },
 ];
@@ -682,14 +682,14 @@ function StockHub() {
   const q = useLiveQuote();
 
   const analysts = [
-    { firm: 'BofA Securities', target: 368, rating: 'Buy', date: 'Jun 23' },
-    { firm: 'DA Davidson', target: 300, rating: 'Buy', date: 'Jun 15' },
-    { firm: 'BTIG', target: 290, rating: 'Buy', date: 'Jun 24' },
-    { firm: 'BMO Capital', target: 285, rating: 'Outperform', date: 'Jun 25' },
-    { firm: 'Piper Sandler', target: 280, rating: 'Overweight', date: 'Jun 2' },
-    { firm: 'Wells Fargo', target: 287, rating: 'Overweight', date: 'May 22' },
-    { firm: 'Wedbush', target: 300, rating: 'Outperform', date: 'Jan 29' },
-    { firm: 'UBS', target: 300, rating: 'Buy', date: 'Jan 28' },
+    { firm: 'BofA Securities', target: 330, rating: 'Buy', date: 'Nov 18' },
+    { firm: 'DA Davidson', target: 300, rating: 'Buy', date: 'Nov 12' },
+    { firm: 'BTIG', target: 295, rating: 'Buy', date: 'Nov 10' },
+    { firm: 'BMO Capital', target: 290, rating: 'Outperform', date: 'Nov 14' },
+    { firm: 'Wells Fargo', target: 285, rating: 'Overweight', date: 'Nov 6' },
+    { firm: 'Piper Sandler', target: 280, rating: 'Overweight', date: 'Nov 4' },
+    { firm: 'Wedbush', target: 278, rating: 'Outperform', date: 'Oct 30' },
+    { firm: 'UBS', target: 262, rating: 'Buy', date: 'Oct 28' },
   ];
 
   const peripherals = [
@@ -740,7 +740,7 @@ function StockHub() {
                 </div>
                 <div className="text-right">
                   <div className="text-3xl font-bold mono">${q.price.toFixed(2)}</div>
-                  <div className="flex items-center justify-end gap-1 text-emerald-400 text-sm"><TrendingUp className="w-3.5 h-3.5" /> +{TTWO.monthChangePct}% this month</div>
+                  <div className="flex items-center justify-end gap-1 text-emerald-400 text-sm"><TrendingUp className="w-3.5 h-3.5" /> +{TTWO.changePct}% · Nov 18 close</div>
                 </div>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
@@ -754,9 +754,9 @@ function StockHub() {
               <div className="bg-white/[0.02] rounded-lg p-4 border border-white/[0.04]">
                 <div className="flex items-center gap-2 mb-3"><Newspaper className="w-4 h-4 text-orange-400" /><span className="text-sm font-medium">Latest Catalyst</span></div>
                 <p className="text-sm text-white/50 leading-relaxed">
-                  Pre-orders are live (<span className="text-white font-medium">$79.99</span> / <span className="text-white font-medium">$99.99</span>), disc-less physical confirmed.
-                  TTWO is up <span className="text-emerald-400 font-medium">~{TTWO.monthChangePct}%</span> this month heading into <span className="text-white font-medium">Q1 earnings on Aug 7</span>, with <span className="text-white font-medium">Trailer 3</span> expected late-July to mid-August.
-                  BofA's Street-high target sits at <span className="text-emerald-400 font-medium">$368</span> (+{upside(368)}% from here).
+                  GTA VI is live — launched <span className="text-white font-medium">November 19, 2026</span> after pre-orders opened June 25 (<span className="text-white font-medium">$79.99</span> / <span className="text-white font-medium">$99.99</span>), disc-less physical confirmed.
+                  TTWO closed at <span className="text-emerald-400 font-medium">$216.61</span> on Nov 18, up <span className="text-emerald-400 font-medium">+6.22%</span> into launch day.
+                  The Street-high target now sits at <span className="text-emerald-400 font-medium">$330</span> (+{upside(330)}% from the snapshot price), with the consensus mean at $290.
                 </p>
               </div>
             </div>
@@ -803,7 +803,7 @@ function StockHub() {
           <div className="glass-card-strong p-4 sm:p-6">
             <img src="/ttwo-full-chart.png" alt="TTWO stock price history chart" loading="lazy" decoding="async" className="w-full rounded-lg" />
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-              {[{ label: 'From 52W Low', val: '+29.6%', color: 'text-emerald-400' }, { label: 'From ATH', val: '-8.3%', color: 'text-red-400' }, { label: '1-Month', val: `+${TTWO.monthChangePct}%`, color: 'text-emerald-400' }, { label: 'Avg Volume', val: '2.25M', color: 'text-white/60' }].map(s => (
+              {[{ label: 'From 52W Low', val: '+17.8%', color: 'text-emerald-400' }, { label: 'From ATH', val: '-18.6%', color: 'text-red-400' }, { label: 'Nov 18 Close', val: `+${TTWO.changePct}%`, color: 'text-emerald-400' }, { label: 'Avg Volume', val: '2.25M', color: 'text-white/60' }].map(s => (
                 <div key={s.label} className="bg-white/[0.02] rounded-lg p-3 text-center">
                   <div className={`text-lg font-bold mono ${s.color}`}>{s.val}</div>
                   <div className="text-[10px] text-white/30 mt-0.5">{s.label}</div>
@@ -1355,17 +1355,17 @@ function Toolkit() {
 function TimelineRisk() {
   const events = [
     { date: 'Jun 25, 2026', title: 'Pre-Orders Live', desc: '$79.99 Standard / $99.99 Ultimate. Disc-less physical edition confirmed.', status: 'done', impact: 'HIGH' },
-    { date: 'Late Jul–Aug 2026', title: 'Trailer 3 Expected', desc: 'The next trailer is projected for late July to mid-August — the biggest pre-launch search-volume spike.', status: 'upcoming', impact: 'HIGH' },
-    { date: 'Aug 7, 2026', title: 'Q1 FY26 Earnings', desc: 'Take-Two reports before launch. Guidance and any GTA VI commentary move the stock.', status: 'upcoming', impact: 'HIGH' },
-    { date: 'Sep 2026', title: 'Review Embargoes Lift', desc: 'Early access for major outlets. Metacritic scores will move TTWO.', status: 'upcoming', impact: 'MEDIUM' },
-    { date: 'Nov 19, 2026', title: 'GTA VI Launch Day', desc: 'Biggest entertainment launch in history. Server stability is the question.', status: 'upcoming', impact: 'CRITICAL' },
+    { date: 'Aug 27, 2026', title: 'An Extended Look', desc: 'Rockstar\'s extended showcase — the deep systems reveal ahead of launch.', status: 'done', impact: 'HIGH' },
+    { date: 'Oct 15, 2026', title: 'Launch Trailer', desc: 'The official launch trailer — the final pre-launch attention spike. No video was ever officially named "Trailer 3".', status: 'done', impact: 'HIGH' },
+    { date: 'Nov 10, 2026', title: 'Pre-Load Opens', desc: 'Digital pre-orders pre-load ahead of launch day.', status: 'done', impact: 'MEDIUM' },
+    { date: 'Nov 19, 2026', title: 'GTA VI Launch Day', desc: 'Biggest entertainment launch in history. Leonida is open — server stability is the story now.', status: 'done', impact: 'CRITICAL' },
     { date: 'Dec 2026', title: 'First Earnings Call', desc: 'Watch: sales figures, ARPU, Online player retention at 30 days.', status: 'upcoming', impact: 'HIGH' },
     { date: 'Q1 2027', title: 'Online Mode Launch', desc: 'GTA VI Online goes live. The real long-tail revenue engine begins.', status: 'upcoming', impact: 'CRITICAL' },
   ];
 
   const risks = [
-    { title: 'Launch Delay', severity: 'HIGH', prob: '15%', desc: 'Any push past Nov 19 triggers sharp double-digit TTWO drop. Already delayed from Fall 2025.', hedge: 'Don\'t hold leveraged positions into October.' },
-    { title: 'Server Meltdown', severity: 'MEDIUM', prob: '25%', desc: 'GTA V Online launch was a disaster. If VI repeats, retention and sentiment crater.', hedge: 'Monitor server status; content around "how to play despite queues".' },
+    { title: 'First-Patch Fallout', severity: 'MEDIUM', prob: '35%', desc: 'Launch is done — now the first major patch decides whether early bugs become the story. A rocky patch cycle dents sentiment and TTWO alike.', hedge: 'Track patch notes and community sentiment before adding exposure.' },
+    { title: 'Server Meltdown', severity: 'MEDIUM', prob: '25%', desc: 'GTA V Online\'s launch was a disaster, and launch week is when VI\'s servers face their real test. Sustained outages would crater retention and sentiment.', hedge: 'Monitor server status; content around "how to play despite queues".' },
     { title: 'Monetization Backlash', severity: 'MEDIUM', prob: '30%', desc: 'Too aggressive microtransactions = community backlash, review bombing.', hedge: 'Content positioning: "fair monetization analysis" wins trust.' },
     { title: 'Regulatory Risk', severity: 'LOW', prob: '10%', desc: 'EU loot box regulation and gaming monetization scrutiny.', hedge: 'Diversify across platforms and geographies.' },
     { title: 'Content Saturation', severity: 'MEDIUM', prob: '40%', desc: 'Millions of creators flood YouTube/TikTok. Standing out becomes expensive.', hedge: 'Niche down NOW. Own a specific angle before the rush.' },
@@ -1383,7 +1383,7 @@ function TimelineRisk() {
           <span className="text-sm font-medium text-orange-400 uppercase tracking-widest">Launch Timeline</span>
         </div>
         <h2 className="text-3xl sm:text-5xl font-black mb-4">Every <span className="text-gradient">Catalyst</span> Mapped</h2>
-        <p className="text-white/40 max-w-2xl mb-10">The road to November is paved with tradable events. Here's your calendar of market-moving moments.</p>
+        <p className="text-white/40 max-w-2xl mb-10">Every catalyst that moved the market — and the ones still to come. Here's the calendar.</p>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Timeline */}
@@ -1438,6 +1438,91 @@ function TimelineRisk() {
 }
 
 /* ═══════════════════════════════════════════
+   THE RESIDENTS — Leonida's named cast
+   ═══════════════════════════════════════════ */
+const CHARACTERS = [
+  { name: 'Jason Duval', role: 'Protagonist', accent: 'orange', line: 'Runs work for the Keys\u2019 drug runners and wants an easy life — instead he meets Lucia, and the two are pulled into a criminal conspiracy that spans the whole state.' },
+  { name: 'Lucia Caminos', role: 'Protagonist', accent: 'rose', line: 'Fresh out of Leonida Penitentiary, where she landed fighting for her family. She is done leaving things to chance — this time the plan is hers.' },
+  { name: 'Cal Hampton', role: 'Jason\u2019s friend', accent: 'cyan', line: 'Lives online at the top of the conspiracy boards. Paranoid, wired, and convinced the tide is always coming in on somebody.' },
+  { name: 'Boobie Ike', role: 'Vice City nightlife', accent: 'amber', line: 'A Vice City legend who turned a club empire into real money. In his world, business and pleasure run through the same ledger.' },
+  { name: 'Dre\u2019Quan Priest', role: 'Only Raw Records', accent: 'emerald', line: 'Hustles harder for the music business than the streets — his label, Only Raw Records, is both the way out and the way up.' },
+  { name: 'Real Dimez', role: 'Rap duo', accent: 'lime', line: 'Bae-Luxe and Roxy: viral rappers with a knack for high-value scores, and an even better one for turning them into content.' },
+  { name: 'Raul Bautista', role: 'Veteran crew chief', accent: 'orange', line: 'A seasoned bank robber with an eye for talent. Charm first, discipline always — and the exit planned before the entrance.' },
+  { name: 'Brian Heder', role: 'Keys smuggler', accent: 'cyan', line: 'Old-school drug runner working out of a Leonida boatyard. Jason\u2019s employer — a man who has outlived every era of the trade.' },
+];
+
+function CharactersSection() {
+  return (
+    <section id="characters" className="py-24 relative">
+      <div className="relative z-10 max-w-7xl mx-auto section-padding reveal-up">
+        <div className="flex items-center gap-3 mb-2">
+          <Users className="w-5 h-5 text-orange-500" />
+          <span className="text-sm font-medium text-orange-400 uppercase tracking-widest">The Residents</span>
+        </div>
+        <h2 className="text-3xl sm:text-5xl font-black mb-4">The Faces of <span className="text-gradient">Leonida</span></h2>
+        <p className="text-white/40 max-w-2xl mb-10">
+          Eight named residents anchor GTA VI's story — a criminal conspiracy stretching across the state,
+          and a cast the content economy will be quoting for years. Know them before the masses do.
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {CHARACTERS.map(c => {
+            const a = ACCENTS[c.accent];
+            return (
+              <div key={c.name} className="glass-card p-5 hover:bg-white/[0.04] hover:-translate-y-0.5 transition-all">
+                <div className={`inline-flex text-[10px] px-2.5 py-1 rounded-md ${a.bg} ${a.text} border ${a.border} uppercase tracking-wider mb-3`}>{c.role}</div>
+                <h3 className="font-bold text-base mb-2">{c.name}</h3>
+                <p className="text-xs text-white/45 leading-relaxed">{c.line}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   CLIPS — the WASTED channel
+   ═══════════════════════════════════════════ */
+function ClipsSection() {
+  const playlists = [
+    { name: 'Trailers & Reveals', desc: 'Every official drop, clipped and captioned the day it lands.' },
+    { name: 'Gameplay Moments', desc: 'The systems, the chases, the chaos — the moments worth replaying.' },
+    { name: 'Cars & Map Tours', desc: 'The named machines and the six regions, toured properly.' },
+    { name: 'Funny Fails', desc: 'Leonida giveth, and Leonida taketh away. The best wrecks in the state.' },
+  ];
+  return (
+    <section id="clips" className="py-24 relative">
+      <div className="relative z-10 max-w-7xl mx-auto section-padding reveal-up">
+        <div className="flex items-center gap-3 mb-2">
+          <Youtube className="w-5 h-5 text-orange-500" />
+          <span className="text-sm font-medium text-orange-400 uppercase tracking-widest">WASTED — The Clip Channel</span>
+        </div>
+        <h2 className="text-3xl sm:text-5xl font-black mb-4">GTA 6 Clips, <span className="text-gradient">Every Day</span></h2>
+        <p className="text-white/40 max-w-2xl mb-10">
+          WASTED posts GTA 6 clips and Shorts from Leonida, every day — clipped fast and categorized
+          so you can binge your lane. Faceless. Just the city, the rise, and the stars overhead.
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {playlists.map(pl => (
+            <a key={pl.name} href="https://www.youtube.com/@WASTEDonVI" target="_blank" rel="noreferrer" className="glass-card p-5 block hover:bg-white/[0.04] hover:-translate-y-0.5 transition-all group">
+              <Play className="w-5 h-5 text-orange-400 mb-3 group-hover:scale-110 transition-transform" />
+              <h3 className="font-bold text-sm mb-1.5">{pl.name}</h3>
+              <p className="text-xs text-white/45 leading-relaxed">{pl.desc}</p>
+            </a>
+          ))}
+        </div>
+        <a href="https://www.youtube.com/@WASTEDonVI" target="_blank" rel="noreferrer">
+          <Button size="lg" className="bg-orange-600 hover:bg-orange-500 text-white px-8 shadow-xl shadow-orange-600/20">
+            <Youtube className="w-4 h-4 mr-2" /> Watch WASTED on YouTube
+          </Button>
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
    FOOTER
    ═══════════════════════════════════════════ */
 function Footer() {
@@ -1455,6 +1540,9 @@ function Footer() {
             <p className="text-sm text-white/30 max-w-sm leading-relaxed">
               The definitive capital allocation guide for the GTA VI launch. Built for players who treat the game as a market, not a toy.
             </p>
+            <a href="https://www.youtube.com/@WASTEDonVI" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 mt-4 text-sm text-orange-400 hover:text-orange-300 transition-colors">
+              <Youtube className="w-4 h-4" /> WASTED — GTA 6 clips &amp; Shorts, daily
+            </a>
           </div>
           <div>
             <h4 className="text-sm font-semibold mb-4">Explore</h4>
@@ -1466,6 +1554,7 @@ function Footer() {
                 { label: 'Content Empire', href: '#content' },
                 { label: 'Real-World Arbitrage', href: '#arbitrage' },
                 { label: 'Timeline & Risk', href: '#timeline' },
+                { label: 'Clips — WASTED', href: '#clips' },
               ].map(item => (
                 <li key={item.href}><a href={item.href} className="text-sm text-white/30 hover:text-orange-400 transition-colors">{item.label}</a></li>
               ))}
@@ -1476,7 +1565,7 @@ function Footer() {
             <ul className="space-y-2">
               {[
                 { label: 'All guides', href: '/guides/' },
-                { label: 'Trailer 3 watch', href: '/guides/gta-6-trailer-3/' },
+                { label: 'Trailers: Extended Look & Launch', href: '/guides/gta-6-trailer-3/' },
                 { label: 'Release date & editions', href: '/guides/gta-6-release-date/' },
                 { label: 'Invest in GTA 6 (TTWO)', href: '/guides/how-to-invest-in-gta-6-ttwo-stock/' },
                 { label: 'Make money in GTA Online', href: '/guides/how-to-make-money-gta-6-online/' },
@@ -1502,7 +1591,7 @@ function Footer() {
           </div>
         </div>
         <div className="pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-[10px] text-white/20">Not financial advice — informational and entertainment purposes only. Market data snapshot as of July 17, 2026.</p>
+          <p className="text-[10px] text-white/20">Not financial advice — informational and entertainment purposes only. Market data snapshot as of November 19, 2026.</p>
           <p className="text-[10px] text-white/20 mono">VICECAPITAL // GTA VI EDITION</p>
         </div>
       </div>
@@ -1532,9 +1621,11 @@ export default function App() {
         <Hero />
         <ThesisDashboard />
         <RegionsSection />
+        <CharactersSection />
         <StockHub />
         <InGameEconomy />
         <ContentSuite />
+        <ClipsSection />
         <ArbitrageSection />
         <Toolkit />
         <TimelineRisk />
